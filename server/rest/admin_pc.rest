@@ -1,0 +1,44 @@
+@baseUrl = http://localhost:3000/api/v1
+
+### Get All PCs
+GET {{baseUrl}}/admin/pcs
+
+### Get PC Details
+GET {{baseUrl}}/admin/pcs/1
+
+### Send Generic Command
+POST {{baseUrl}}/admin/pcs/1/command
+Content-Type: application/json
+
+{
+    "command": "lock",
+    "payload": {}
+}
+
+### Toggle Maintenance
+POST {{baseUrl}}/admin/pcs/1/maintenance
+
+### Command Shortcut: Reset Time
+POST {{baseUrl}}/admin/pcs/1/reset-time
+
+### Command Shortcut: Add Time
+POST {{baseUrl}}/admin/pcs/1/add-time
+Content-Type: application/json
+
+{
+    "payload": {
+        "seconds": 3600
+    }
+}
+
+### Command Shortcut: Lock
+POST {{baseUrl}}/admin/pcs/1/lock
+
+### Command Shortcut: Unlock
+POST {{baseUrl}}/admin/pcs/1/unlock
+
+### Command Shortcut: Shutdown
+POST {{baseUrl}}/admin/pcs/1/shutdown
+
+### Command Shortcut: Restart
+POST {{baseUrl}}/admin/pcs/1/restart

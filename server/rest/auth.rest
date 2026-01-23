@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:3000/api/v1
+
+### Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin123"
+}
+
+### Get Current User (Me)
+GET {{baseUrl}}/auth/me
+
+### Logout
+POST {{baseUrl}}/auth/logout

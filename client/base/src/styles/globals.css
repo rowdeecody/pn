@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Theme tokens (used by tailwind.config via CSS variables) */
+  --color-neon-primary: #7c3aed; /* violet-500 */
+  --color-neon-accent: #06b6d4; /* cyan-500 */
+  --color-hud-bg: rgba(0, 0, 0, 0.45);
+  --peso-net-bg: url('/src/assets/backgrounds/peso-net-bg.webp');
+  --glow-radius: 12px;
+}
+
+/* App background helper */
+.app-bg {
+  background-image: var(--peso-net-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  color: white;
+}
+
+/* HUD panel */
+.hud {
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.15));
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  border-radius: 10px;
+}
+
+/* Neon glow utilities */
+.neon {
+  color: var(--color-neon-primary);
+  text-shadow: 0 0 var(--glow-radius) rgba(124, 58, 237, 0.8);
+}
+.neon-accent {
+  color: var(--color-neon-accent);
+  text-shadow: 0 0 calc(var(--glow-radius) / 1.2) rgba(6, 182, 212, 0.75);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .app-bg,
+  .hud,
+  .neon,
+  .neon-accent {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Small utility for mini overlay */
+.mini-overlay {
+  width: 300px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

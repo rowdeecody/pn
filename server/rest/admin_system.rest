@@ -1,0 +1,35 @@
+@baseUrl = http://localhost:3000/api/v1
+
+### Get System Settings
+GET {{baseUrl}}/admin/system/settings
+
+### Update System Settings
+POST {{baseUrl}}/admin/system/settings
+Content-Type: application/json
+
+{
+    "settings": [
+        {"key": "site_name", "value": "My New Peso Net", "type": "string"},
+        {"key": "minutes_per_peso", "value": "6", "type": "number"}
+    ]
+}
+
+### Trigger Backup
+POST {{baseUrl}}/admin/system/backup
+
+### Restore Backup
+POST {{baseUrl}}/admin/system/restore
+Content-Type: application/json
+
+{
+    "backupPath": "backups/manual_backup.sqlite"
+}
+
+### Restart Server
+POST {{baseUrl}}/admin/system/restart
+
+### Admin Live: Get Online PCs
+GET {{baseUrl}}/admin/live/pcs
+
+### Admin Live: Request Screenshot
+GET {{baseUrl}}/admin/live/screenshot/1

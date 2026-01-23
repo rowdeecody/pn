@@ -1,0 +1,9 @@
+[
+    {
+        "name": "Administrator",
+        "username": "admin",
+        "email": "admin@pesonet.com",
+        "password_hash": "test123",
+        "role": "admin"
+    }
+]

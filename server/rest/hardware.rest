@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:3000/api/v1
+
+### Insert Coin
+POST {{baseUrl}}/hardware/coin
+Content-Type: application/json
+
+{
+    "amount": 5
+}
+
+### Get Hardware Status
+GET {{baseUrl}}/hardware/status
+
+### Hardware Heartbeat
+GET {{baseUrl}}/hardware/heartbeat
+
+### Log Rejected Coin
+POST {{baseUrl}}/hardware/coin/rejected
+Content-Type: application/json
+
+{
+    "amount": 1,
+    "reason": "bent_coin"
+}

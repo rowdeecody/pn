@@ -1,0 +1,84 @@
+@baseUrl = http://localhost:3000/api/v1
+
+### Register PC
+# @name register
+POST {{baseUrl}}/clients/register
+Content-Type: application/json
+
+{
+    "name": "Test-PC-06",
+    "mac_address": "AA:BB:CC:DD:EE:06",
+    "ip_address": "192.168.1.6"
+}
+
+### PC Heartbeat
+POST {{baseUrl}}/clients/heartbeat
+Content-Type: application/json
+
+{
+    "pc_id": 1
+}
+
+### Get Config
+GET {{baseUrl}}/clients/config
+
+### Request Coin Insertion (Set PC to Active)
+POST {{baseUrl}}/clients/request-coin
+Content-Type: application/json
+
+{
+    "pc_id": 1
+}
+
+### Cancel Coin Request
+POST {{baseUrl}}/clients/cancel-coin
+Content-Type: application/json
+
+{
+    "pc_id": 1
+}
+
+### Confirm Lock
+POST {{baseUrl}}/clients/lock
+Content-Type: application/json
+
+{
+    "pc_id": 1
+}
+
+### Confirm Unlock
+POST {{baseUrl}}/clients/unlock
+Content-Type: application/json
+
+{
+    "pc_id": 1
+}
+
+### Get Session Info
+GET {{baseUrl}}/clients/session?pc_id=3
+
+### Confirm Shutdown
+POST {{baseUrl}}/clients/shutdown
+Content-Type: application/json
+
+{
+    "pc_id": 1
+}
+
+### Confirm Restart
+POST {{baseUrl}}/clients/restart
+Content-Type: application/json
+
+{
+    "pc_id": 3
+}
+
+### Verify Registration
+POST {{baseUrl}}/clients/verify
+Content-Type: application/json
+
+{
+    "mac_address": "AA:BB:CC:DD:EE:01"
+}
+
+

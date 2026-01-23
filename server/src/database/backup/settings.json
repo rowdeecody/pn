@@ -1,0 +1,6 @@
+[
+    { "key": "minutes_per_peso", "value": "5", "type": "number" },
+    { "key": "min_coin_amount", "value": "1", "type": "number" },
+    { "key": "site_name", "value": "Peso Net Server", "type": "string" },
+    { "key": "idle_timeout_seconds", "value": "60", "type": "number" }
+]
