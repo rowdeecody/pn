@@ -1,0 +1,27 @@
+{
+  "appId": "com.cody.centralizepesonet",
+  "productName": "CentralizePesoNet",
+  "directories": {
+    "output": "dist_electron"
+  },
+  "files": [
+    "dist/**/*",
+    "assets/**/*",
+    "package.json"
+  ],
+  "win": {
+    "target": "nsis",
+    "icon": "assets/icon.ico",
+    "signAndEditExecutable": false,
+    "forceCodeSigning": false
+  },
+  "nsis": {
+    "oneClick": false,                     
+    "perMachine": true,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "CentralizePesoNet"
+  }
+}
