@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peso Net - Neon Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #00ff9d;
+            --neon-purple: #bd00ff;
+            --bg-dark: #0b0b10;
+            --glass-bg: rgba(20, 20, 30, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(189, 0, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 0, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center bottom;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* Ambient Background Glow */
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(to top, rgba(189, 0, 255, 0.15), transparent);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Main Window Container */
+        .app-window {
+            min-width: 1000px;
+            min-height: 800px;
+            background: rgba(13, 13, 18, 0.95);
+            border: 2px solid var(--neon-purple);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(189, 0, 255, 0.4), inset 0 0 30px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(10px);
+            /* floating animation removed */
+        }
+
+        /* Header */
+        .header {
+            padding: 15px 30px;
+            border-bottom: 1px solid rgba(189, 0, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--neon-green);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-green);
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .app-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--neon-green);
+            letter-spacing: 2px;
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            flex: 1;
+            display: flex;
+            padding: 30px;
+            gap: 40px;
+        }
+
+        /* Left Side: Timer */
+        .timer-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .progress-ring {
+            width: 280px;
+            height: 280px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring__circle-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 15;
+            fill: transparent;
+        }
+
+        .progress-ring__circle {
+            stroke: var(--neon-green);
+            stroke-width: 15;
+            fill: transparent;
+            stroke-dasharray: 754; /* 2 * PI * r (r=120) */
+            stroke-dashoffset: 0;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 8px var(--neon-green));
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .timer-text {
+            position: absolute;
+            text-align: center;
+        }
+
+        .time-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .time-label {
+            color: var(--neon-green);
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+
+        /* Right Side: Controls */
+        .controls-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .balance-card {
+            background: rgba(189, 0, 255, 0.1);
+            border: 1px solid var(--neon-purple);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(189, 0, 255, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .balance-label {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 10px #fff;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .neon-btn {
+            background: transparent;
+            border: 2px solid;
+            padding: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-label {
+            display: inline-block;
+        }
+
+        .btn-green {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 5px var(--neon-green);
+        }
+
+        .btn-green:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-green);
+        }
+
+        .btn-purple {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+            box-shadow: 0 0 5px var(--neon-purple);
+        }
+
+        .btn-purple:hover {
+            background: var(--neon-purple);
+            color: #fff;
+            box-shadow: 0 0 20px var(--neon-purple);
+        }
+
+        .btn-red {
+            border-color: #ff3366;
+            color: #ff3366;
+            box-shadow: 0 0 5px #ff3366;
+        }
+
+        .btn-red:hover {
+            background: #ff3366;
+            color: #fff;
+            box-shadow: 0 0 20px #ff3366;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px 30px;
+            display: flex;
+            gap: 20px;
+            border-top: 1px solid rgba(189, 0, 255, 0.2);
+        }
+
+        .status-box {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 0.85rem;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .status-icon {
+            color: var(--neon-green);
+        }
+
+        /* Animations removed */
+
+    </style>
+</head>
+<body>
+
+    <div class="app-window">
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">P</div>
+                <div class="app-title">PESO NET</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="timer-section">
+                <svg class="progress-ring">
+                    <circle class="progress-ring__circle-bg" r="120" cx="140" cy="140"/>
+                    <circle class="progress-ring__circle" r="120" cx="140" cy="140"/>
+                </svg>
+                <div class="timer-text">
+                    <div class="time-display" id="timeDisplay">00:15:30</div>
+                    <div class="time-label">REMAINING</div>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <div class="balance-card">
+                    <div class="balance-label">Current Balance</div>
+                    <div class="balance-amount">₱ <span id="balance">10.00</span></div>
+                </div>
+
+                <div class="buttons-grid">
+                    <button class="neon-btn btn-green" onclick="insertCoin()">
+                        <span class="btn-icon" aria-hidden="true">
+                            <!-- coin icon -->
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 11h6"/></svg>
+                        </span>
+                        <span class="btn-label">Insert Coin</span>
+                    </button>
+                    <button class="neon-btn btn-purple" onclick="loginAccount()">
+                        <span class="btn-icon" aria-hidden="true">
+                            <!-- login/user icon -->
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </span>
+                        <span class="btn-label">Login Account</span>
+                    </button>
+                </div>
+                <!-- Rates table -->
+                <div class="rates-card" style="background: rgba(0,0,0,0.25); border:1px solid rgba(189,0,255,0.12); padding:12px; border-radius:8px;">
+                    <div style="color:#ccc; font-size:0.9rem; margin-bottom:8px;">Rates</div>
+                    <table style="width:100%; border-collapse:collapse; color:#fff; font-size:0.9rem;">
+                        <thead>
+                            <tr style="text-align:left; border-bottom:1px solid rgba(255,255,255,0.06);">
+                                <th style="padding:8px 6px; color:var(--neon-green);">Duration</th>
+                                <th style="padding:8px 6px; color:var(--neon-purple);">Price (₱)</th>
+                                <th style="padding:8px 6px; color:#fff;">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                                <td style="padding:8px 6px;">6 minutes</td>
+                                <td style="padding:8px 6px;">5.00</td>
+                                <td style="padding:8px 6px;">Base increment</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                                <td style="padding:8px 6px;">30 minutes</td>
+                                <td style="padding:8px 6px;">10.00</td>
+                                <td style="padding:8px 6px;">Standard</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                                <td style="padding:8px 6px;">1 hour</td>
+                                <td style="padding:8px 6px;">20.00</td>
+                                <td style="padding:8px 6px;">Best value</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:8px 6px;">2 hours</td>
+                                <td style="padding:8px 6px;">20.00</td>
+                                <td style="padding:8px 6px;">Special</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="status-box">
+                <span class="status-icon">📶</span> Wi-Fi Status: <strong>Connected</strong>
+            </div>
+            <div class="status-box">
+                <span class="status-icon">🆔</span> Session ID: <strong>#94820</strong>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Timer Logic ---
+        const circle = document.querySelector('.progress-ring__circle');
+        const radius = circle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+
+        // Configuration
+        let totalTimeSeconds = 15 * 60 + 30; // 15 mins 30 seconds
+        let remainingTime = totalTimeSeconds;
+        let balance = 10.00;
+
+        function setProgress(percent) {
+            const offset = circumference - (percent / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(remainingTime / 3600);
+            const minutes = Math.floor((remainingTime % 3600) / 60);
+            const seconds = remainingTime % 60;
+
+            const display = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById('timeDisplay').innerText = display;
+
+            // Calculate percentage for ring
+            const percentage = (remainingTime / (30 * 60)) * 100; // Assuming 30 mins max for visual scaling
+            setProgress(percentage);
+        }
+
+        function startTimer() {
+            updateTimerDisplay(); // Initial draw
+            setInterval(() => {
+                if (remainingTime > 0) {
+                    remainingTime--;
+                    updateTimerDisplay();
+                } else {
+                    // Time's up logic
+                    circle.style.stroke = "red";
+                }
+            }, 1000);
+        }
+
+        // --- Interaction Logic ---
+        function insertCoin() {
+            // Simulate adding 5 pesos
+            balance += 5.00;
+            document.getElementById('balance').innerText = balance.toFixed(2);
+            
+            // Add time (e.g., 10 mins per 5 pesos)
+            remainingTime += 600; 
+            updateTimerDisplay();
+        }
+
+        function extendTime() {
+             if(balance >= 5) {
+                 balance -= 5;
+                 remainingTime += 600;
+                 document.getElementById('balance').innerText = balance.toFixed(2);
+                 updateTimerDisplay();
+             } else {
+                 alert("Insufficient balance!");
+             }
+        }
+
+        // Initialize
+        startTimer();
+
+        // --- Header buttons dynamic text ---
+        const headerMinBtn = document.getElementById('headerMinBtn');
+        const headerFsBtn = document.getElementById('headerFsBtn');
+
+        headerMinBtn.addEventListener('click', () => {
+            windowAPI.minimize();
+        });
+
+        headerFsBtn.addEventListener('click', () => {
+            windowAPI.fullscreen();
+        });
+
+        // update texts based on window state sent from main
+        if (windowAPI.onFullscreenChange) {
+            windowAPI.onFullscreenChange((isFs) => {
+                const lbl = headerFsBtn.querySelector('.btn-label');
+                if (lbl) lbl.innerText = isFs ? 'Exit Fullscreen' : 'Fullscreen';
+            });
+        }
+
+        if (windowAPI.onMinimizeChange) {
+            windowAPI.onMinimizeChange((isMin) => {
+                const lbl = headerMinBtn.querySelector('.btn-label');
+                if (lbl) lbl.innerText = isMin ? 'Restore' : 'Minimize';
+            });
+        }
+    </script>
+</body>
+</html>
+
